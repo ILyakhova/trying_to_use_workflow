@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 # Access the environment variable
 app_env = os.environ.get('APP_ENV', 'Development')
-connection_string = os.environ.get('DB_CONNECTIO', '')
+connection_string = os.environ.get('DB_CONNECTION', '')
 
 # Configure the MySQL database connection
 app.config['SQLALCHEMY_DATABASE_URI'] = connection_string
@@ -24,7 +24,7 @@ class Counter(db.Model):
     value = db.Column(db.Integer)
 
 
-# Initialize the databased
+# Initialize the database
 with app.app_context():
     db.create_all()
     counter = Counter.query.first()
@@ -45,11 +45,11 @@ def hello():
 <pre>                   ##        .</pre>
 <pre>             ## ## ##       ==</pre>
 <pre>          ## ## ## ##      ===</pre>
-<pre>      /""""""""""""""""\\___/ ===</pre>
+<pre>      /""""""""""""""""\\\\___/ ===</pre>
 <pre> ~~~ (~~ ~~~~ ~~~ ~~~~ ~~ ~ /  ===-- ~~~</pre>
-<pre>      \\______ o          __/</pre>
-<pre>        \    \        __/</pre>
-<pre>         \\____\\______/</pre>
+<pre>      \\\\______ o          __/</pre>
+<pre>        \\\\    \\\\        __/</pre>
+<pre>         \\\\____\\\\______/</pre>
     '''
 
 
@@ -75,12 +75,11 @@ def readiness_check():
 def external_call():
     external_url = os.getenv('EXTERNAL_ENDPOINT')
     if not external_url:
-        Response('EXTERNAL_ENDPOINT not defined', status=500)
+        return Response('EXTERNAL_ENDPOINT not defined', status=500)
     try:
         response = requests.get(external_url)
         return Response(
-            f"External call response: {response.text}",
-            status=response.status_code
+            f"External call response: {response.text}", status=response.status_code
         )
     except Exception as e:
         return Response(f"Error calling external endpoint: {str(e)}", status=500)

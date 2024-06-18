@@ -2,9 +2,9 @@ import pytest
 from unittest.mock import patch
 import os
 
-from app import app, db
-
 os.environ.setdefault('DB_CONNECTION', 'sqlite:///:memory:')
+
+from app import app, db
 
 
 @pytest.fixture
@@ -15,13 +15,11 @@ def client():
     # Setup the database
     with app.app_context():
         db.create_all()
-
     yield client
-
     # Teardown the database
     with app.app_context():
-       db.session.remove()
-       db.drop_all()
+        db.session.remove()
+        db.drop_all()
 
 
 def test_home_page(client):
@@ -29,8 +27,6 @@ def test_home_page(client):
     response = client.get('/')
     assert b'Docker is Awesome!' in response.data
     assert b'Page reload count: 1' in response.data
-
-
     # Check if counter increments
     second_response = client.get('/')
     assert b'Page reload count: 2' in second_response.data
