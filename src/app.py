@@ -10,11 +10,11 @@ start_period = 10
 app = Flask(__name__)
 
 # Access the environment variable
-app_env = os.environ.get("APP_ENV", "Development")
-connection_string = os.environ.get("DB_CONNECTION", "")
+app_env = os.environ.get('APP_ENV', 'Development')
+connection_string = os.environ.get('DB_CONNECTIO', '')
 
 # Configure the MySQL database connection
-app.config["SQLALCHEMY_DATABASE_URI"] = connection_string
+app.config['SQLALCHEMY_DATABASE_URI'] = connection_string
 db = SQLAlchemy(app)
 
 
@@ -34,7 +34,7 @@ with app.app_context():
         db.session.commit()
 
 
-@app.route("/")
+@app.route('/')
 def hello():
     counter = Counter.query.first()
     counter.value += 1
@@ -53,29 +53,29 @@ def hello():
     '''
 
 
-@app.route("/logo")
+@app.route('/logo')
 def docker_logo():
-    return send_file("docker-logo.png", mimetype="image/png")
+    return send_file('docker-logo.png', mimetype='image/png')
 
 
-@app.route("/health")
+@app.route('/health')
 def health_check():
-    return Response("Healthy", status=200)
+    return Response('Healthy', status=200)
 
 
-@app.route("/ready")
+@app.route('/ready')
 def readiness_check():
     if time.time() < start_time + start_period:
-        return Response("Not Ready", status=503)
+        return Response('Not Ready', status=503)
     else:
-        return Response("Ready", status=200)
+        return Response('Ready', status=200)
 
 
-@app.route("/external-call")
+@app.route('/external-call')
 def external_call():
-    external_url = os.getenv("EXTERNAL_ENDPOINT")
+    external_url = os.getenv('EXTERNAL_ENDPOINT')
     if not external_url:
-        Response("EXTERNAL_ENDPOINT not defined", status=500)
+        Response('EXTERNAL_ENDPOINT not defined', status=500)
     try:
         response = requests.get(external_url)
         return Response(
@@ -86,5 +86,5 @@ def external_call():
         return Response(f"Error calling external endpoint: {str(e)}", status=500)
 
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080)
